@@ -1,15 +1,15 @@
 #!/bin/bash
 
 ##################################################################################################
-# Authors:																						 #
+# Authors:                                                                                       #
 #   Anantha Raju C <arcswdev@gmail.com>                                                          #
-#   Various Open Source Projects                                                       			 #
-#																								 #
-# Description:																					 #
+#   Various Open Source Projects                                                                 #
+#                                                                                                #
+# Description:                                                                                   #
 #  A post-installation bash script for Ubuntu                                                    #
 #                                                                                                #
-# Legal Preamble:																				 #
-#																								 #
+# Legal Preamble:                                                                                #
+#                                                                                                #
 # This script is free software; you can redistribute it and/or modify it under                   #
 # the terms of the GNU General Public License as published by the Free Software                  #
 # Foundation; version 3.                                                                         #
@@ -19,6 +19,11 @@
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more                         #
 # details.                                                                                       #
 ##################################################################################################
+
+# Log Location on system.
+LOG_LOCATION=~/Downloads
+exec > >(tee -i $LOG_LOCATION/post-install-script.log)
+exec 2>&1
 
 c='\e[32m' # Coloured echo (Green)
 y=$'\033[38;5;11m' # Coloured echo (yellow)
@@ -42,76 +47,65 @@ fi
 # 5 seconds wait time to start the setup
 for i in `seq 5 -1 1` ; do echo -ne "$i\rThe setup will start in..." ; sleep 1 ; done
 
+echo -e "${c}Log Location should be: [ $LOG_LOCATION ]"
+
 cd ~
 
-# Remove unwanted packages
-
-echo -e "${c}Removing unwanted packages."; $r
+echo -e "${c}\nRemoving unwanted packages."; $r
 sudo apt autoremove -y
 
-# An interactive process viewer.
 
-echo -e "${c}Installing htop."; $r
+echo -e "${c}htop - An interactive process viewer."; $r
 sudo snap install htop
 
-# Linux/OSX/FreeBSD resource monitor.
 
-echo -e "${c}Installing bpytop."; $r
+echo -e "${c}bpytop - Linux/OSX/FreeBSD resource monitor."; $r
 sudo snap install bpytop
 
-# Simple yet fancy CPU architecture fetching tool.
 
-echo -e "${c}Installing cpufetch."; $r
+echo -e "${c}cpufetch - Simple yet fancy CPU architecture fetching tool."; $r
 sudo snap install cpufetch
 
-# A command-line system information tool written in bash 3.2+
 
-echo -e "${c}Installing neofetch."; $r
+echo -e "${c}neofetch - A command-line system information tool written in bash 3.2+"; $r
 sudo apt install neofetch -y
 
-# A cat(1) clone with syntax highlighting and Git integration.
 
-echo -e "${c}Installing bat."; $r
+echo -e "${c}bat - A cat(1) clone with syntax highlighting and Git integration."; $r
 sudo apt install bat -y
 
 echo -e "${c}Adding batcat alias."; $r
-if ! grep -q "alias cat='batcat'" ".bashrc"; then
-   echo "alias cat='batcat'" >> ~/.bashrc
-fi
+if ! grep -q "alias cat='batcat'" ".bashrc"; then echo "alias cat='batcat'" >> ~/.bashrc; fi
 
-# Command line interface for testing internet bandwidth using speedtest.net
 
-echo -e "${c}Installing speedtest."; $r
+echo -e "${c}speedtest-cli - Command line interface for testing internet bandwidth using speedtest.net"; $r
 sudo apt install speedtest-cli -y
 
-# multiple GNOME terminals in one window.
 
-echo -e "${c}Installing terminator."; $r
+echo -e "${c}terminator - multiple GNOME terminals in one window."; $r
 sudo apt install terminator -y
 
-# Fast disk usage analyzer with console interface written in Go.
 
-echo -e "${c}Installing gdu."; $r
+echo -e "${c}gdu - Fast disk usage analyzer with console interface written in Go."; $r
 sudo add-apt-repository ppa:daniel-milde/gdu -y
 sudo apt-get update
 sudo apt-get install gdu -y
 
-# GNU Wget is a free software package for retrieving files using HTTP, HTTPS, FTP and FTPS, the most widely used Internet protocols.
 
-echo -e "${c}Installing wget."; $r
+echo -e "${c}wget - GNU Wget is a free software package for retrieving files using HTTP, HTTPS, FTP and FTPS, the most widely used Internet protocols."; $r
 sudo apt-get install wget -y
 
-# Cross-platform web browser developed by Google.
 
-echo -e "${c}Installing google chrome browser."; $r
+echo -e "${c}google chrome - Cross-platform web browser developed by Google."; $r
 cd /home/anantha/Downloads
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+sudo apt install google-chrome-stable_current_amd64.deb
 rm -f google-chrome-stable_current_amd64.deb
 cd ~
 
 # Various utilities
 
-echo -e "${c}Installing VLC media player."; $r
+echo -e "${c}vlc - media player."; $r
 sudo apt install vlc -y
 
 # Final Upgrade and Update Command
@@ -119,10 +113,11 @@ sudo apt install vlc -y
 echo -e "${c}Updating and upgrading to finish post-install script."; $r
 sudo apt update
 sudo apt upgrade -y
+echo -e "${c}Fixing broken installation."; $r
 sudo apt --fix-broken install -y
 
 # Installation complete.
 
-echo "All done! Please reboot the computer."
+echo -e "${c}All done! Please reboot the computer."
 
 # END OF SCRIPT
