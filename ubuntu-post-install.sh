@@ -85,6 +85,9 @@ sudo apt install speedtest-cli -y
 echo -e "${c}terminator - multiple GNOME terminals in one window."; $r
 sudo apt install terminator -y
 
+echo -e "${c}tmux - terminal multiplexer"; $r
+sudo apt install tmux -y
+
 
 echo -e "${c}gdu - Fast disk usage analyzer with console interface written in Go."; $r
 sudo add-apt-repository ppa:daniel-milde/gdu -y
